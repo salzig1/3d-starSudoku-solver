@@ -1,12 +1,10 @@
 import math
-import pprint
-import copy
 
 
 def solve(board):
     find = find_empty_cell(board)
     if not find:
-        return True
+        return board
     else:
         box, cell = find
 
@@ -15,7 +13,7 @@ def solve(board):
             board[box][cell] = i
 
             if solve(board):
-                return True
+                return board
             board[box][cell] = 0
     return False
 
@@ -50,7 +48,7 @@ def valid_row_col(board, position, cell_value):
     if box_num == 0:
         # horizontal
         row_of_cell = math.floor(cell_num / 4)
-        if horizontal_constraint(position, 1, row_of_cell * 4, cell_value):
+        if horizontal_constraint(board, position, 1, row_of_cell * 4, cell_value):
             return False
 
         # vertikal
@@ -64,7 +62,7 @@ def valid_row_col(board, position, cell_value):
     if box_num == 1:
         # horizontal
         row_of_cell = math.floor(cell_num / 4)
-        if horizontal_constraint(position, 0, row_of_cell * 4, cell_value):
+        if horizontal_constraint(board, position, 0, row_of_cell * 4, cell_value):
             return False
 
         # vertikal
@@ -85,7 +83,7 @@ def valid_row_col(board, position, cell_value):
         if complete_row.count(cell_value) > 0:
             return False
         col_of_cell = get_col_number(cell_num)
-        if vertical_constraint(position, 4, col_of_cell, cell_value):
+        if vertical_constraint(board, position, 4, col_of_cell, cell_value):
             return False
 
     if box_num == 3:
@@ -98,30 +96,30 @@ def valid_row_col(board, position, cell_value):
         if complete_row.count(cell_value) > 0:
             return False
         col_of_cell = get_col_number(cell_num)
-        if vertical_constraint(position, 5, col_of_cell, cell_value):
+        if vertical_constraint(board, position, 5, col_of_cell, cell_value):
             return False
 
     if box_num == 4:
         # horizontal
         row_of_cell = math.floor(cell_num / 4)
-        if horizontal_constraint(position, 5, row_of_cell * 4, cell_value):
+        if horizontal_constraint(board, position, 5, row_of_cell * 4, cell_value):
             return False
         col_of_cell = get_col_number(cell_num)
-        if vertical_constraint(position, 2, col_of_cell, cell_value):
+        if vertical_constraint(board, position, 2, col_of_cell, cell_value):
             return False
 
     if box_num == 5:
         row_of_cell = math.floor(cell_num / 4)
-        if horizontal_constraint(position, 4, row_of_cell*4, cell_value):
+        if horizontal_constraint(board, position, 4, row_of_cell*4, cell_value):
             return False
         col_of_cell = get_col_number(cell_num)
-        if vertical_constraint(position, 3, col_of_cell, cell_value):
+        if vertical_constraint(board, position, 3, col_of_cell, cell_value):
             return False
 
     return True
 
 
-def horizontal_constraint(position, box, start_cell, cell_value):
+def horizontal_constraint(board, position, box, start_cell, cell_value):
     row0 = get_row(board, position)
     row1 = get_row(board, (box, start_cell))
     complete_row = row0 + row1
@@ -131,7 +129,7 @@ def horizontal_constraint(position, box, start_cell, cell_value):
 
 
 
-def vertical_constraint(position, box, start_cell, cell_value):
+def vertical_constraint(board, position, box, start_cell, cell_value):
     col0 = get_col(board, position)
     col1 = get_col(board, (box, start_cell))
     complete_col = col0 + col1
@@ -169,8 +167,6 @@ def find_empty_cell(board):
     return None
 
 
-
-
 def helper(num):
     if num == 0:
         return 3
@@ -195,38 +191,11 @@ def get_col_number(cell_num):
 
 
 if __name__ == "__main__":
-    board = [[3, 0, 0, 0,
-              0, 2, 0, 0,
-              8, 0, 0, 0,
-              0, 0, 3, 0],
-
-             [0, 0, 0, 6,
-              8, 0, 0, 1,
-              7, 0, 0, 0,
-              0, 4, 0, 0],
-
-             [0, 0, 0, 0,
-              0, 0, 0, 4,
-              0, 4, 0, 5,
-              3, 0, 0, 0],
-
-             [0, 0, 0, 0,
-              0, 0, 5, 0,
-              1, 0, 0, 0,
-              0, 2, 0, 0],
-
-             [0, 0, 0, 0,
-              8, 2, 4, 0,
-              0, 0, 0, 0,
-              0, 6, 0, 0],
-
-             [8, 0, 0, 6,
-              0, 3, 0, 0,
-              2, 6, 3, 0,
-              0, 7, 0, 0]]
-
-
-
-    solve(board)
-    pprint.pprint(board)
-
+    board = [[7, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0],
+             [0, 0, 0, 6, 1, 4, 7, 0, 2, 0, 0, 0, 0, 0, 8, 1],
+             [8, 0, 0, 0, 0, 0, 0, 0, 3, 5, 0, 0, 0, 0, 6, 7],
+             [0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 7, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 1, 4, 6, 0, 8, 0, 5, 6, 0, 0, 1],
+             [0, 2, 0, 0, 0, 0, 0, 7, 3, 0, 0, 0, 0, 0, 0, 0]]
+    solvedBoard = solve(board)
+    print(solvedBoard)
